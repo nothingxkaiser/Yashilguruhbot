@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5-sinf nazorat paneli</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #faf9f6;
+      color: #1f2937;
+      margin: 0;
+      padding: 0 0 100px 0;
+    }
+    .ust-panel {
+      background: linear-gradient(135deg, #ff8a00 0%, #f97316 100%);
+      color: #ffffff;
+      padding: 18px 18px 22px 18px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.22);
+    }
+    .ust-panel .sarlavha {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+    .ust-panel .izoh {
+      font-size: 13px;
+      opacity: 0.94;
+      font-weight: 500;
+    }
+    .mazmun {
+      padding: 16px;
+    }
+    .qidiruv-kutu {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      background-color: #ffffff;
+      color: #1f2937;
+      font-size: 15px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      outline: none;
+    }
+    .qidiruv-kutu:focus {
+      border-color: #f97316;
+    }
+    .karta {
+      background-color: #ffffff;
+      border: 1px solid #eceae4;
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .karta-tepa {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    .ism-blok {
+      display: flex;
+      flex-direction: column;
+    }
+    .oquvchi-ism {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .seri-matn {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    .unvan-belgi {
+      padding: 6px 12px;
+      border-radius: 12px;
+      background-color: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .tugmalar {
+      display: flex;
+      gap: 8px;
+    }
+    .tugma {
+      flex: 1;
+      border: 1px solid transparent;
+      padding: 11px 8px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .bajarilgan {
+      background-color: #ecfdf5;
+      border-color: #a7f3d0;
+      color: #059669;
+    }
+    .bajarilmagan {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+    .pastki-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      padding: 12px 16px 16px 16px;
+      border-top: 1px solid #f0eee9;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+    }
+    .yuborish-tugma {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff8a00 0%, #f97316 100%);
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.32);
+    }
+    .yuborish-tugma:active {
+      transform: scale(0.99);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ust-panel">
+    <div class="sarlavha">5-SINF PANELI</div>
+    <div class="izoh">Kunlik nazorat</div>
+  </div>
+
+  <div class="mazmun">
+    <input type="text" id="qidiruv" class="qidiruv-kutu" placeholder="O‘quvchini qidirish..." oninput="chizish()">
+    <div id="royxat"></div>
+  </div>
+
+  <div class="pastki-panel">
+    <button class="yuborish-tugma" onclick="guruhgaYuborish()">Guruhga yuborish</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const oquvchilar = [
+      "Muhammadsolih",
+      "Muhammadyahyo",
+      "Muhammadjon",
+      "Akobir",
+      "Mustafo",
+      "Zebo",
+      "Diyorbek",
+      "Davron"
+    ];
+
+    function unvonHisobla(seri) {
+      if (seri >= 20) return "Prime";
+      if (seri >= 14) return "Master";
+      if (seri >= 10) return "Titan";
+      if (seri >= 6) return "Vanguard";
+      if (seri >= 3) return "Ranger";
+      return "Starter";
+    }
+
+    const saqlanganSeriyalar = JSON.parse(localStorage.getItem("sinf_seriyalar") || "{}");
+
+    const holat = {};
+    oquvchilar.forEach(ism => {
+      const oldingiSeri = saqlanganSeriyalar[ism] || 0;
+      holat[ism] = {
+        yaxshiOtirdi: false,
+        uygaVazifaQildi: false,
+        oldingiSeri: oldingiSeri,
+        seri: oldingiSeri,
+        unvan: unvonHisobla(oldingiSeri)
+      };
+    });
+
+    function yangiSeriyaniHisobla(ism) {
+      const h = holat[ism];
+      if (h.yaxshiOtirdi && h.uygaVazifaQildi) {
+        h.seri = h.oldingiSeri + 1;
+      } else {
+        h.seri = 0;
+      }
+      h.unvan = unvonHisobla(h.seri);
+    }
+
+    function chizish() {
+      const qidirilgan = document.getElementById("qidiruv").value.toLowerCase().trim();
+      const royxat = document.getElementById("royxat");
+      royxat.innerHTML = "";
+
+      oquvchilar
+        .filter(ism => ism.toLowerCase().includes(qidirilgan))
+        .forEach(ism => {
+          const h = holat[ism];
+          const karta = document.createElement("div");
+          karta.className = "karta";
+
+          karta.innerHTML = `
+            <div class="karta-tepa">
+              <div class="ism-blok">
+                <div class="oquvchi-ism">${ism}</div>
+                <div class="seri-matn">Seriya: ${h.seri} kun</div>
+              </div>
+              <div class="unvan-belgi">${h.unvan}</div>
+            </div>
+            <div class="tugmalar">
+              <button class="tugma ${h.yaxshiOtirdi ? "bajarilgan" : "bajarilmagan"}" onclick="otirishOzgartir('${ism}')">
+                ${h.yaxshiOtirdi ? "Yaxshi o‘tirdi" : "Yaxshi o‘tirmadi"}
+              </button>
+              <button class="tugma ${h.uygaVazifaQildi ? "bajarilgan" : "bajarilmagan"}" onclick="vazifaOzgartir('${ism}')">
+                ${h.uygaVazifaQildi ? "Uyga vazifasini qildi" : "Uyga vazifasini qilmadi"}
+              </button>
+            </div>
+          `;
+          royxat.appendChild(karta);
+        });
+    }
+
+    function otirishOzgartir(ism) {
+      holat[ism].yaxshiOtirdi = !holat[ism].yaxshiOtirdi;
+      yangiSeriyaniHisobla(ism);
+      chizish();
+    }
+
+    function vazifaOzgartir(ism) {
+      holat[ism].uygaVazifaQildi = !holat[ism].uygaVazifaQildi;
+      yangiSeriyaniHisobla(ism);
+      chizish();
+    }
+
+    function guruhgaYuborish() {
+      const yangiSeriyalar = {};
+      oquvchilar.forEach(ism => {
+        yangiSeriyalar[ism] = holat[ism].seri;
+      });
+      localStorage.setItem("sinf_seriyalar", JSON.stringify(yangiSeriyalar));
+
+      tg.sendData(JSON.stringify({ yozuvlar: holat }));
+    }
+
+    chizish();
+  </script>
+</body>
+</html>
